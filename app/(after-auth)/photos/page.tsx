@@ -1,7 +1,8 @@
+import DropZone from "@/components/dropzone";
 import React from "react";
 
 const Photos = () => {
-  return <div>Photos</div>;
+  return <DropZone />;
 };
 
 export default Photos;

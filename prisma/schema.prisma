@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -19,7 +13,7 @@ model User {
   email    String @unique
 
   createdAt DateTime @default(now())
-  updatedAt DateTime
+  updatedAt DateTime @updatedAt
 }
 
 model Album {
@@ -28,19 +22,19 @@ model Album {
   description String?
 
   createdAt DateTime @default(now())
-  updatedAt DateTime
+  updatedAt DateTime @updatedAt
   Photo     Photo[]
 }
 
 model Photo {
-  id          String  @id @default(cuid())
+  id          String   @id @default(cuid())
   name        String
   description String?
   albumId     String?
-  album       Album?  @relation(fields: [albumId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime
+  album       Album?   @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  size        Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   @@map("photos")
 }

@@ -5,7 +5,7 @@ import { toast } from "sonner";
 
 export interface Attachment {
   file: File;
-  by?: string;
+  by?: string | { id: string | null };
   url?: string;
   size?: number;
   isUploading: boolean;
@@ -16,47 +16,58 @@ export default function useUploader() {
   const [attachments, setAttachments] = useState<Attachment[]>([]);
 
   const [uploadProgress, setUploadProgress] = useState<number>();
+  const [urls, setUrls] = useState<string[] | null>(null);
 
-  const { startUpload, isUploading } = useUploadThing("attachtment", {
-    onBeforeUploadBegin(files) {
-      const renamedFiles = files.map((file) => {
-        const extension = file.name.split(".").pop();
-        return new File([file], `file_${crypto.randomUUID()}.${extension}`, {
-          type: file.type,
+  const { startUpload, isUploading, routeConfig } = useUploadThing(
+    "attachment",
+    {
+      onBeforeUploadBegin(files) {
+        const renamedFiles = files.map((file) => {
+          const extension = file.name.split(".").pop();
+          return new File([file], `file_${crypto.randomUUID()}.${extension}`, {
+            type: file.type,
+          });
         });
-      });
 
-      setAttachments((prev) => [
-        ...prev,
-        ...renamedFiles.map((file) => ({ file, isUploading: true })),
-      ]);
+        setAttachments((prev) => [
+          ...prev,
+          ...renamedFiles.map((file) => ({ file, isUploading: true })),
+        ]);
 
-      return renamedFiles;
-    },
-    onUploadProgress: setUploadProgress,
-    onClientUploadComplete(res) {
-      setAttachments((prev) =>
-        prev.map((a) => {
-          const uploadResult = res.find((r) => r.name === a.file.name);
+        return renamedFiles;
+      },
+      onUploadProgress: setUploadProgress,
+      onClientUploadComplete(res) {
+        console.log(res);
 
-          if (!uploadResult) return a;
+        setAttachments((prev) =>
+          prev.map((a) => {
+            const uploadResult = res.find((r) => r.name === a.file.name);
 
-          return {
-            ...a,
-            by: uploadResult.serverData.uploadedBy,
-            url: uploadResult.url,
-            isUploading: false,
-            size: uploadResult.size,
-            type: uploadResult.type.split("/")[1],
-          };
-        })
-      );
-    },
-    onUploadError(e) {
-      setAttachments((prev) => prev.filter((a) => !a.isUploading));
-      toast.error("Upload failed");
-    },
-  });
+            if (!uploadResult) return a;
+
+            return {
+              ...a,
+              by: uploadResult.serverData.uploadedBy,
+              url: uploadResult.url,
+              isUploading: false,
+              size: uploadResult.size,
+              type: uploadResult.type.split("/")[1],
+            };
+          })
+        );
+        setUrls(res.map((r) => r.url));
+        const urls = res.map((r) => r.url);
+
+        console.log(urls);
+      },
+
+      onUploadError(e) {
+        setAttachments((prev) => prev.filter((a) => !a.isUploading));
+        toast.error("Upload failed");
+      },
+    }
+  );
 
   function handleStartUpload(files: File[]) {
     if (isUploading) {
@@ -101,5 +112,7 @@ export default function useUploader() {
     uploadProgress,
     removeAttachment,
     reset,
+    routeConfig,
+    urls,
   };
 }
