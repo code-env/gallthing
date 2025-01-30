@@ -1,11 +1,9 @@
-import { utapi } from "@/app/api/uploadthing/uploathing";
 import { useUploadThing } from "@/lib/uploathing";
 import { useState } from "react";
 import { toast } from "sonner";
 
 export interface Attachment {
   file: File;
-  by?: string | { id: string | null };
   url?: string;
   size?: number;
   isUploading: boolean;
@@ -48,7 +46,6 @@ export default function useUploader() {
 
             return {
               ...a,
-              by: uploadResult.serverData.uploadedBy,
               url: uploadResult.url,
               isUploading: false,
               size: uploadResult.size,

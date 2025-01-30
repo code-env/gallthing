@@ -1,4 +1,6 @@
+import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
+import { revalidatePath } from "next/cache";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
 
@@ -9,7 +11,7 @@ const handleAuth = async () => {
 
   if (!userId) new UploadThingError("Unauthorized");
 
-  return { id: userId };
+  return { userId };
 };
 
 export const ourFileRouter = {
@@ -20,16 +22,23 @@ export const ourFileRouter = {
     },
   })
     .middleware(async ({ req }) => {
-      const userId = await handleAuth();
+      const { userId } = await handleAuth();
       if (!userId) throw new UploadThingError("Unauthorized");
 
       return { userId };
     })
-    .onUploadComplete(({ metadata: { userId }, file }) => {
-      console.log("Upload complete for userId:", userId);
-
-      console.log("file url", file.url);
-      return { uploadedBy: userId };
+    .onUploadComplete(async ({ metadata: { userId }, file }) => {
+      const attachment = await db.photo.create({
+        data: {
+          url: file.url,
+          key: file.key,
+          size: file.size,
+          name: file.name,
+          userId,
+        },
+      });
+      revalidatePath("/photos");
+      return { userId, id: attachment.id };
     }),
 } satisfies FileRouter;
 

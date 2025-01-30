@@ -14,6 +14,9 @@ importers:
       '@clerk/nextjs':
         specifier: ^6.10.2
         version: 6.10.2(next@15.1.6(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@plaiceholder/next':
+        specifier: ^3.0.0
+        version: 3.0.0(next@15.1.6(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(plaiceholder@3.0.0(sharp@0.33.5))(sharp@0.33.5)
       '@prisma/client':
         specifier: ^6.2.1
         version: 6.2.1(prisma@6.2.1)
@@ -56,6 +59,9 @@ importers:
       next:
         specifier: 15.1.6
         version: 15.1.6(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      plaiceholder:
+        specifier: ^3.0.0
+        version: 3.0.0(sharp@0.33.5)
       react:
         specifier: ^19.0.0
         version: 19.0.0
@@ -441,6 +447,13 @@ packages:
   '@pkgjs/parseargs@0.11.0':
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
+
+  '@plaiceholder/next@3.0.0':
+    resolution: {integrity: sha512-7UK/H1X64hwo2VaxOPKMXE+OY9IgmKLPsq/xKHZ+gU07oqQSfIWWIgpVVucMB3ZgVYah+68agR15BRuSxAuMHw==}
+    peerDependencies:
+      next: '>= 10.0.0'
+      plaiceholder: '>=3.0.0'
+      sharp: '>= 0.30.6'
 
   '@prisma/client@6.2.1':
     resolution: {integrity: sha512-msKY2iRLISN8t5X0Tj7hU0UWet1u0KuxSPHWuf3IRkB4J95mCvGpyQBfQ6ufcmvKNOMQSq90O2iUmJEN2e5fiA==}
@@ -1882,6 +1895,11 @@ packages:
     resolution: {integrity: sha512-saLsH7WeYYPiD25LDuLRRY/i+6HaPYr6G1OUlN39otzkSTxKnubR9RTxS3/Kk50s1g2JTgFwWQDQyplC5/SHZg==}
     engines: {node: '>= 6'}
 
+  plaiceholder@3.0.0:
+    resolution: {integrity: sha512-jwHxxHPnr1BwRzPCeZgEK2BMsEy2327sWynw3qb6XC/oGgGDUTPtR8pFxFQmNArhMBwhkUbUr5OPhhIJpCa8eQ==}
+    peerDependencies:
+      sharp: '>= 0.30.6'
+
   possible-typed-array-names@1.0.0:
     resolution: {integrity: sha512-d7Uw+eZoloe0EHDIYoe+bQ5WXnGMOpmiZFTuMWCwpjzzkL2nTjcKiAk4hh8TjnGye2TwWOk3UXucZ+3rbmBa8Q==}
     engines: {node: '>= 0.4'}
@@ -2712,6 +2730,12 @@ snapshots:
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
+  '@plaiceholder/next@3.0.0(next@15.1.6(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(plaiceholder@3.0.0(sharp@0.33.5))(sharp@0.33.5)':
+    dependencies:
+      next: 15.1.6(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      plaiceholder: 3.0.0(sharp@0.33.5)
+      sharp: 0.33.5
+
   '@prisma/client@6.2.1(prisma@6.2.1)':
     optionalDependencies:
       prisma: 6.2.1
@@ -3318,13 +3342,11 @@ snapshots:
     dependencies:
       color-name: 1.1.4
       simple-swizzle: 0.2.2
-    optional: true
 
   color@4.2.3:
     dependencies:
       color-convert: 2.0.1
       color-string: 1.9.1
-    optional: true
 
   commander@4.1.1: {}
 
@@ -3390,8 +3412,7 @@ snapshots:
 
   dequal@2.0.3: {}
 
-  detect-libc@2.0.3:
-    optional: true
+  detect-libc@2.0.3: {}
 
   detect-node-es@1.1.0: {}
 
@@ -3925,8 +3946,7 @@ snapshots:
       call-bound: 1.0.3
       get-intrinsic: 1.2.7
 
-  is-arrayish@0.3.2:
-    optional: true
+  is-arrayish@0.3.2: {}
 
   is-async-function@2.1.1:
     dependencies:
@@ -4296,6 +4316,10 @@ snapshots:
 
   pirates@4.0.6: {}
 
+  plaiceholder@3.0.0(sharp@0.33.5):
+    dependencies:
+      sharp: 0.33.5
+
   possible-typed-array-names@1.0.0: {}
 
   postcss-import@15.1.0(postcss@8.5.1):
@@ -4528,7 +4552,6 @@ snapshots:
       '@img/sharp-wasm32': 0.33.5
       '@img/sharp-win32-ia32': 0.33.5
       '@img/sharp-win32-x64': 0.33.5
-    optional: true
 
   shebang-command@2.0.0:
     dependencies:
@@ -4569,7 +4592,6 @@ snapshots:
   simple-swizzle@0.2.2:
     dependencies:
       is-arrayish: 0.3.2
-    optional: true
 
   snake-case@3.0.4:
     dependencies:
