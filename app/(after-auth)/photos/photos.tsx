@@ -2,8 +2,9 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import PhotoPreview from "./photo";
 
-type Photo = {
+export type Photo = {
   base64: string;
   img: {
     src: string;
@@ -27,26 +28,9 @@ const Photos = ({ photos }: { photos: Photo[] }) => {
     <div className="max-w-5xl mx-auto min-h-screen border-x w-full fixed inset-0 m-auto grid md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 overflow-y-auto">
       {columns.map((column, colIndex) => (
         <div key={colIndex} className="gap-4 flex flex-col">
-          {column.map((photo, idx) => {
-            return (
-              <div
-                key={photo.img.src + idx}
-                className="border rounded-3xl overflow-hidden relative"
-                style={{
-                  height: photo.img.height / 2.5,
-                }}
-              >
-                <Image
-                  fill
-                  src={photo.img.src}
-                  placeholder="blur"
-                  blurDataURL={photo.base64}
-                  alt="nothing"
-                  className="size-full aspect-auto object-cover"
-                />
-              </div>
-            );
-          })}
+          {column.map((photo, idx) => (
+            <PhotoPreview photo={photo} key={idx} />
+          ))}
         </div>
       ))}
     </div>
