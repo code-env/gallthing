@@ -15,3 +15,6 @@ export async function getImage(src: string) {
     img: { src, height, width },
   };
 }
+
+export const getImages = async (urls: string[]) =>
+  Promise.all(urls.map(async (url) => getImage(url)));

@@ -5,6 +5,7 @@ import { auth, clerkClient } from "@clerk/nextjs/server";
 import { Photo } from "@prisma/client";
 import Images from "./photos";
 import { Suspense } from "react";
+import { getImages } from "@/lib/images";
 
 const Photos = async () => {
   const { userId } = await auth();
@@ -36,15 +37,9 @@ const Photos = async () => {
     },
   });
 
-  const splitIntoColumns = (photoss: Photo[], cols: number) => {
-    const result: Photo[][] = Array.from({ length: cols }, () => []);
-    photoss.forEach((photos, index) => {
-      result[index % cols].push(photos);
-    });
-    return result;
-  };
+  const urls = photos.map((photo) => photo.url);
 
-  const columns = splitIntoColumns(photos, 3);
+  const images = await getImages(urls);
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -62,7 +57,7 @@ const Photos = async () => {
           </div>
         )}
 
-        {photos.length > 0 && <Images photos={photos} />}
+        {photos.length > 0 && <Images photos={images} />}
       </div>
     </Suspense>
   );

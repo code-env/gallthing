@@ -1,36 +1,22 @@
 "use client";
 
-import { ClipboardEvent, useEffect, useState } from "react";
-import { getImageDimensions } from "@/lib/getImageDimensions"; // Adjust the import path as needed
-import { Photo } from "@prisma/client";
-import { cn } from "@/lib/utils";
-import useUploader from "@/hooks/use-uploader";
+import Image from "next/image";
+import { useState } from "react";
+
+type Photo = {
+  base64: string;
+  img: {
+    src: string;
+    height: number;
+    width: number;
+  };
+};
 
 const Photos = ({ photos }: { photos: Photo[] }) => {
-  const [imageDimensions, setImageDimensions] = useState<
-    { url: string; width: number; height: number }[]
-  >([]);
-
-  const { startUpload } = useUploader();
-
-  useEffect(() => {
-    const fetchImageDimensions = async () => {
-      const dimensions = await Promise.all(
-        photos.map(async (photo) => {
-          const { width, height } = await getImageDimensions(photo.url);
-          return { url: photo.url, width, height };
-        })
-      );
-      setImageDimensions(dimensions);
-    };
-
-    fetchImageDimensions();
-  }, [photos]);
-
-  const splitIntoColumns = (photoss: Photo[], cols: number) => {
+  const splitIntoColumns = (photos: Photo[], cols: number) => {
     const result: Photo[][] = Array.from({ length: cols }, () => []);
-    photoss.forEach((photos, index) => {
-      result[index % cols].push(photos);
+    photos.forEach((photo, index) => {
+      result[index % cols].push(photo);
     });
     return result;
   };
@@ -42,20 +28,19 @@ const Photos = ({ photos }: { photos: Photo[] }) => {
       {columns.map((column, colIndex) => (
         <div key={colIndex} className="gap-4 flex flex-col">
           {column.map((photo, idx) => {
-            const dimensions = imageDimensions.find(
-              (dim) => dim.url === photo.url
-            );
-            // const {} =
             return (
               <div
-                key={photo.name + idx}
-                className="border rounded-3xl overflow-hidden"
+                key={photo.img.src + idx}
+                className="border rounded-3xl overflow-hidden relative"
                 style={{
-                  height: dimensions ? dimensions.height / 2.5 : "auto",
+                  height: photo.img.height / 2.5,
                 }}
               >
-                <img
-                  src={photo.url}
+                <Image
+                  fill
+                  src={photo.img.src}
+                  placeholder="blur"
+                  blurDataURL={photo.base64}
                   alt="nothing"
                   className="size-full aspect-auto object-cover"
                 />
